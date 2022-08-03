@@ -15,7 +15,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="$store.state.user.userInfo.staffPhoto" class="user-avatar" />
+          <img :src="$store.state.user.userInfo.staffPhoto" class="user-avatar" 
+          v-imgError="defaultImg"/>
           <span>{{$store.state.user.userInfo.username}}</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -38,6 +39,11 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
+  data () {
+    return {
+      defaultImg: "http://destiny001.gitee.io/image/monkey_02.jpg"
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
