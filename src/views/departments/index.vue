@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <el-card class="box-card">
+      <el-card class="box-card" v-loading="loading">
         <!-- 头部 -->
         <TreeTools
           :treeNode="company"
@@ -15,13 +15,19 @@
               :treeNode="data"
               @remove="loadDepts"
               @add="showAddDept"
+              @edit="showEdit"
             ></TreeTools>
           </template>
         </el-tree>
       </el-card>
     </div>
     <!-- 添加部门弹层 -->
-    <add-dept :visible.sync="dialogVisible" :currentNode="currentNode" @add-success="loadDepts"/>
+    <add-dept
+      :visible.sync="dialogVisible"
+      :currentNode="currentNode"
+      @add-success="loadDepts"
+      ref="addDept"
+    />
   </div>
 </template>
 
@@ -43,7 +49,8 @@ export default {
       },
       company: { name: '传智教育', manager: '负责人' },
       dialogVisible: false,
-      currentNode:{}
+      currentNode:{},
+      loading:false
     }
   },
   components: {
@@ -57,13 +64,19 @@ export default {
 
   methods: {
     async loadDepts() {
+      this.loading = true
       const res = await getDeptsApi()
       this.treeData = transListToTree(res.depts, '')
+      this.loading = false
     },
     showAddDept(val) {
       this.dialogVisible = true
       this.currentNode=val
     },
+    showEdit(val){
+      this.dialogVisible = true
+      this.$refs.addDept.getDeptById(val.id)
+    }
   },
 }
 </script>
