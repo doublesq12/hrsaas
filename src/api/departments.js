@@ -1,0 +1,22 @@
+import request from '@/utils/request'
+export function getDeptsApi(){
+  return request({
+    url:'/company/department',
+  })
+}
+//组织架构——根据ID删除部门
+export function delDeptsApi(id){
+  return request({
+    url: '/company/department/' + id,
+    method:'DELETE',
+  })
+}
+//组织架构——新增部门
+export function addDeptApi(data) {
+  return request({
+    url: '/company/department/',
+    method: 'POST',
+    data
+  })
+}
+

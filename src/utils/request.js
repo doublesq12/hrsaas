@@ -16,7 +16,7 @@ function isTimeOut(){
 service.interceptors.request.use(async (config) => {
   if (store.state.user.token) {
     if (isTimeOut()) {
-      console.log('过期');
+      // console.log('过期');
       await store.dispatch('user/logout')
       router.push('/login')
       return Promise.reject(new Error('登录过期'))
