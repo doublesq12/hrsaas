@@ -3,7 +3,9 @@
     <div class="app-container">
       <el-tabs v-model="activeName">
         <el-tab-pane label="角色管理" name="first">
-          <el-button type="primary" @click="addDialogVisible = true">角色管理</el-button>
+          <el-button type="primary" @click="addDialogVisible = true"
+            >角色管理</el-button
+          >
           <el-table :data="tableData" style="width: 100%" border>
             <el-table-column type="index" label="序号"> </el-table-column>
             <el-table-column prop="name" label="角色"> </el-table-column>
@@ -29,7 +31,29 @@
           >
           </el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="公司信息" name="second">公司信息</el-tab-pane>
+        <el-tab-pane label="公司信息" name="second">
+          <el-alert
+            title="对公司名称、公司地址、营业执照、公司地区的更新，将使得公司资料被重新审核，请谨慎修改"
+            type="info"
+            show-icon
+            :closable="false"
+          >
+          </el-alert>
+          <el-form ref="form" label-width="80px">
+            <el-form-item label="公司名称">
+              <el-input disabled v-model="companyInfo.name"></el-input>
+            </el-form-item>
+            <el-form-item label="公司地址">
+              <el-input disabled v-model="companyInfo.companyAddress"></el-input>
+            </el-form-item>
+            <el-form-item label="公司邮箱">
+              <el-input disabled v-model="companyInfo.mailbox"></el-input>
+            </el-form-item>
+            <el-form-item label="备注">
+              <el-input disabled v-model="companyInfo.remarks"></el-input>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
       </el-tabs>
     </div>
     <!-- 添加角色对话框 -->
@@ -61,7 +85,8 @@
 </template>
 
 <script>
-import { getRolesApi,addRoleApi } from '@/api/role'
+import { getRolesApi, addRoleApi } from '@/api/role'
+import {getCompanyInfoApi} from '@/api/setting'
 export default {
   data() {
     return {
@@ -71,18 +96,20 @@ export default {
       pageSize: 2,
       page: 1,
       addDialogVisible: false,
+      companyInfo:'',
       addRoleForm: {
         name: '',
         description: '',
       },
       addRoleFormRules: {
-        name:[{ required: true, message: '请填写部门名称', trigger: 'blur' }],
-    }
+        name: [{ required: true, message: '请填写部门名称', trigger: 'blur' }],
+      },
     }
   },
 
   created() {
     this.getRoles()
+    this.getCompanyInfo()
   },
 
   methods: {
@@ -106,22 +133,27 @@ export default {
       this.addDialogVisible = false
     },
     //点击取消
-    async onAddRole(){
+    async onAddRole() {
       await this.$refs.form.validate()
-      console.log('表单校验通过，发送请求');
+      console.log('表单校验通过，发送请求')
     },
-    async onAddRole(){
+    async onAddRole() {
       await this.$refs.form.validate()
       await addRoleApi(this.addRoleForm)
       this.$message.success('添加成功')
-      this.addDialogVisible=false
+      this.addDialogVisible = false
       this.getRoles()
     },
     //监听对话框关闭
-    dialogClose(){
+    dialogClose() {
       //添加成功数据重置
       this.$refs.form.resetFields()
-      this.addRoleForm.description=''
+      this.addRoleForm.description = ''
+    },
+    async getCompanyInfo(){
+      const res=await getCompanyInfoApi(this.$store.state.user.userInfo.companyId)
+      // console.log(res);
+      this.companyInfo=res
     }
   },
 }
