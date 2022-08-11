@@ -31,4 +31,11 @@ export function editDeptsApi(data) {
     data
   })
 }
+export function getEmployeesInfoApi(params) {
+  return request({
+    url: '/sys/user',
+    params
+  })
+}
+
 

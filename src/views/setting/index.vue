@@ -77,7 +77,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="onClose">取 消</el-button>
+        <el-button c>取 消</el-button>
         <el-button type="primary" @click="onAddRole">确 定</el-button>
       </span>
     </el-dialog>
