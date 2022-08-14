@@ -101,6 +101,7 @@ import { getEmployeesInfoApi } from '@/api/departments'
 import employees from '@/constant/employees'
 import { delEmployee } from '@/api/employees'
 import AddEmployees from './components/add-employees.vue'
+const {exportExcelMapPath,hireType}=employees
 export default {
   data() {
     return {
@@ -150,12 +151,30 @@ export default {
     },
     async exportExcel() {
       const { export_json_to_excel } = await import('@/vendor/Export2Excel')
+      const { rows } = await getEmployeesInfoApi({
+        page:1,
+        size:this.total
+      })
+      // console.log(rows);
+      // return
+       const header=Object.keys(exportExcelMapPath)
+    // console.log(header);
+    const data=rows.map((item)=>{
+      return header.map((h)=>{
+        if(h==='聘用形式'){
+          const findItem=hireType.find((hire)=>{
+            return hire.id===item[exportExcelMapPath[h]]
+          })
+          return findItem?findItem.value:'未知'
+        }else{
+          return item[exportExcelMapPath[h]]
+        }
+      })
+    })
+      
       export_json_to_excel({
-        header: ['姓名','手机号'], //表头 必填
-        data:[
-          ['张三','15958039196'],
-          ['lisi','13588085799']
-        ] ,//具体数据 必填
+        header, //表头 必填
+        data,//具体数据 必填
         filename: '员工列表', //非必填
         autoWidth: true, //非必填
         bookType: 'xlsx', //非必填
