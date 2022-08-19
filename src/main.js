@@ -17,6 +17,8 @@ import '@/permission' // permission control
 import * as directives from '@/directives'
 import components from './components'
 import * as filters from '@/filters'
+import Print from 'vue-print-nb'
+Vue.use(Print)
 
 Vue.use(components)
 for(let key in filters) {
