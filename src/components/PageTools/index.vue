@@ -45,6 +45,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.box-card{
+  margin: 10px 0;
+}
 
 </style>

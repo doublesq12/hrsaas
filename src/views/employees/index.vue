@@ -8,12 +8,15 @@
             size="small"
             type="warning"
             @click="$router.push('/import')"
+            v-if="isHas(point.employees.import)"
             >导入</el-button
           >
           <el-button size="small" type="danger" @click="exportExcel"
+          v-isHas="point.employees.import"
             >导出</el-button
           >
           <el-button size="small" type="primary" @click="showAdd"
+          v-if="isHas(point.employees.add)"
             >新增员工</el-button
           >
         </template>
@@ -68,7 +71,7 @@
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button type="text" size="small" @click="showAssignDialog(row.id)">角色</el-button>
-              <el-button type="text" size="small" @click="onRemove(row.id)"
+              <el-button type="text" size="small" @click="onRemove(row.id)" v-if="isHas(point.employees.del)"
                 >删除</el-button
               >
             </template>
@@ -109,6 +112,8 @@ import AddEmployees from './components/add-employees.vue'
 import AssignRole from './components/assign-role.vue'
 const {exportExcelMapPath,hireType}=employees
 import QRcode from 'qrcode'
+import MixinPermission from '@/mixins/permission'
+
 
 export default {
   data() {
@@ -122,9 +127,13 @@ export default {
       showAddEmployees: false,
       ercodeDialog:false,
       showAssignRole:false,
-      currentEmployeesId:''
+      currentEmployeesId:'',
+      
     }
   },
+  //混入
+  mixins:[MixinPermission],
+
   components: {
     AddEmployees,
     AssignRole
@@ -204,7 +213,8 @@ export default {
     showAssignDialog(id){
       this.showAssignRole=true
       this.currentEmployeesId=id
-    }
+    },
+ 
   },
 }
 </script>
