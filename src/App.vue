@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- 一级路由占位 -->
     <router-view />
   </div>
 </template>
@@ -8,9 +9,7 @@
 export default {
   name: 'App',
   data() {
-    return {
-      e: ''
-    }
-  }
+    return {}
+  },
 }
 </script>

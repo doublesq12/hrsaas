@@ -1,7 +1,9 @@
 import request from '@/utils/request'
-//企业管理——根据ID查询企业
+/**
+ * 获取公司信息
+ * **/
 export function getCompanyInfoApi(companyId) {
   return request({
-    url:`/company/${companyId}`
+    url: `/company/${companyId}`,
   })
 }

@@ -1,32 +1,31 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <el-card class="box-card" v-loading="loading">
+      <el-card v-loading="loading" class="box-card">
         <!-- 头部 -->
-        <TreeTools
-          :treeNode="company"
-          :isRoot="true"
-          @add="showAddDept"
-        ></TreeTools>
+        <tree-tools @add="showAddDept" :isRoot="true" :treeNode="company" />
         <!-- 树形 -->
         <el-tree :data="treeData" :props="defaultProps" default-expand-all>
+          <!-- 这是作用域插槽 -->
+          <!-- v-slot 获取组件内部slot提供的数据 -->
           <template v-slot="{ data }">
-            <TreeTools
-              :treeNode="data"
-              @remove="loadDepts"
+            <tree-tools
               @add="showAddDept"
+              @remove="loadDepts"
               @edit="showEdit"
-            ></TreeTools>
+              :treeNode="data"
+            />
           </template>
         </el-tree>
       </el-card>
     </div>
+
     <!-- 添加部门弹层 -->
     <add-dept
+      ref="addDept"
+      @add-success="loadDepts"
       :visible.sync="dialogVisible"
       :currentNode="currentNode"
-      @add-success="loadDepts"
-      ref="addDept"
     />
   </div>
 </template>
@@ -35,7 +34,7 @@
 import TreeTools from './components/tree-tools.vue'
 import { getDeptsApi } from '@/api/departments'
 import { transListToTree } from '@/utils'
-import AddDept from './components/add-dept.vue'
+import AddDept from './components/add-dept'
 export default {
   data() {
     return {
@@ -45,14 +44,16 @@ export default {
         { name: '人事部' },
       ],
       defaultProps: {
-        label: 'name',
+        label: 'name', // 将data中哪个数据名显示到树形页面中
+        // children: 'child', // 树形默认查找子节点通过childten
       },
       company: { name: '传智教育', manager: '负责人' },
       dialogVisible: false,
-      currentNode:{},
-      loading:false
+      currentNode: {},
+      loading: false,
     }
   },
+
   components: {
     TreeTools,
     AddDept,
@@ -71,12 +72,12 @@ export default {
     },
     showAddDept(val) {
       this.dialogVisible = true
-      this.currentNode=val
+      this.currentNode = val
     },
-    showEdit(val){
+    showEdit(val) {
       this.dialogVisible = true
       this.$refs.addDept.getDeptById(val.id)
-    }
+    },
   },
 }
 </script>

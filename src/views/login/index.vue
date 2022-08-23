@@ -1,79 +1,98 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginFormRules" class="login-form" auto-complete="on" label-position="left">
-
+    <!-- 表单校验 1. 添加model属性: 整个表单数据 -->
+    <!-- 表单校验 2. 添加rules属性: 整个表单校验规则 -->
+    <el-form
+      ref="loginForm"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+      :model="loginForm"
+      :rules="loginFormRules"
+    >
+      <!-- 放置标题图片 @是设置的别名-->
       <div class="title-container">
         <h3 class="title">
-          <img src="@/assets/common/login-logo.png" alt="">
+          <img src="@/assets/common/login-logo.png" alt="" />
         </h3>
- </div>
-
-  <!-- 表单区域 -->
-   <el-form-item prop="mobile">
-    <i class="el-icon-user-solid svg-container"></i>
-    <el-input v-model="loginForm.mobile"></el-input>
-  </el-form-item>
-   <el-form-item prop="password">
-     <i class="svg-container">
-        <svg-icon iconClass="password"></svg-icon>
-      </i>
-    <el-input v-model="loginForm.password" type="password">
-     
-    </el-input>
-  </el-form-item>
-
-
-      <el-button  type="primary" style="width:100%;margin-bottom:30px;"  class="loginBtn" @click="login" :loading="isLogin">登录</el-button>
-
-      <div class="tips">
-        <span style="margin-right:20px;">账号: 13800000002</span>
-        <span> 密码: 123456</span>
       </div>
 
+      <!-- 表单区域 -->
+      <el-form-item prop="mobile">
+        <i class="el-icon-user-solid svg-container"></i>
+        <el-input v-model="loginForm.mobile"></el-input>
+      </el-form-item>
+      <el-form-item prop="password">
+        <i class="svg-container">
+          <svg-icon iconClass="password"></svg-icon>
+        </i>
+        <el-input type="password" v-model="loginForm.password"></el-input>
+      </el-form-item>
+
+      <el-button
+        type="primary"
+        class="loginBtn"
+        style="width: 100%; margin-bottom: 30px"
+        :loading="isLogin"
+        @click="login"
+        >登录</el-button
+      >
+
+      <div class="tips">
+        <span style="margin-right: 20px">用户名: 13800000002</span>
+        <span> 密码: 123456</span>
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
-
-
 export default {
   name: 'Login',
-  data () {
+  data() {
     return {
-      loginForm:{
-        mobile:'13800000002',
-        password:'123456'
+      // 1. 定义数据
+      loginForm: {
+        mobile: '13800000002',
+        password: '123456',
       },
-      loginFormRules:{
-        mobile:[
-          { required: true, message: '请输入手机号码', trigger: 'blur' },
-          {pattern:/^(?:(?:\+|00)86)?1[3-9]\d{9}$/,message: '格式不正确', trigger: 'blur'}  
+      loginFormRules: {
+        // 规则名和数据名保持一致
+        mobile: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          {
+            pattern: /^(?:(?:\+|00)86)?1[3-9]\d{9}$/,
+            message: '手机号码格式不正确',
+            trigger: 'blur',
+          },
         ],
-        password:[
+        password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          // {pattern:/^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]/,message: '请包含数字、字母、特殊字符,并且不能少于6位', trigger: 'blur'}  
-        ]
+          // {
+          //   pattern:
+          //     /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]/,
+          //   message: '密码请包含数字字母特殊字符,并且不能少于6位',
+          //   trigger: 'blur',
+          // },
+        ],
       },
-      isLogin:false
+      isLogin: false,
     }
   },
-  methods:{
-    async login(){
-      this.isLogin=true
+  methods: {
+    async login() {
+      // console.log('点击登录')
+      this.isLogin = true
       try {
         await this.$refs.loginForm.validate()
-        // console.log('表单校验成功，可以发送请求')
-        await this.$store.dispatch('user/getToken',this.loginForm)
+        await this.$store.dispatch('user/getToken', this.loginForm)
         this.$router.push('/')
         this.$message.success('登录成功')
       } finally {
-        this.isLogin=false
-        
+        this.isLogin = false
       }
-    }
-  }
-
+    },
+  },
 }
 </script>
 
@@ -81,9 +100,9 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#68b0fe;
-$cursor: #fff;
+$bg: #283443;
+$light_gray: #68b0fe;
+$cursor: #68b0fe;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -93,8 +112,14 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
-  .el-form-item-error{
-    color:#fff
+  .el-form-item__error {
+    color: #fff;
+  }
+  .loginBtn {
+    background: #407ffe;
+    height: 64px;
+    line-height: 32px;
+    font-size: 24px;
   }
   .el-input {
     display: inline-block;
@@ -119,7 +144,7 @@ $cursor: #fff;
   }
 
   .el-form-item {
-       border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.7); // 输入登录表单的背景色
     border-radius: 5px;
     color: #454545;
@@ -128,23 +153,16 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
-  overflow: hidden;
-   background-image: url('~@/assets/common/login.jpg'); // 设置背景图片
+  background-image: url('~@/assets/common/login.jpg'); // 设置背景图片
   background-position: center; // 将图片位置设置为充满整个屏幕
-  .loginBtn {
-  background: #407ffe;
-  height: 64px;
-  line-height: 32px;
-  font-size: 24px;
-}
+  overflow: hidden;
 
   .login-form {
     position: relative;
